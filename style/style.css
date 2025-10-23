@@ -7,27 +7,54 @@
   padding: 0;
 }
 
-i {
-  font-size: 35px;
-  cursor: pointer;
-  margin: 0 10px;
-  color: black;
+:root {
+  --brand: #e91e63; /* fashion pink */
+  --brand-hover: #c2185b;
+  --text: #222;
+  --muted: #6c757d;
+  --bg: #fff7fa; /* soft pink background */
+  --panel: #ffffff; /* card/container bg */
+  --panel-2: #ffffff; /* secondary panels */
+  --border: #eee;
+  --danger: #de6b5c;
+  --like: #e63946;
+  --gap: 22px; /* default grid gap */
 }
-main {
+
+html, body { height: 100%; }
+html { scroll-behavior: smooth; }
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Sticky footer layout */
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
+
+i {
+  font-size: 28px;
+  cursor: pointer;
+  margin: 0 8px;
+  color: black;
+  transition: color .15s ease, transform .15s ease;
+}
+main { display: block; flex: 1 0 auto; }
+header, footer { flex: 0 0 auto; }
 
 .shopping-card-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #e7e7e7;
+  width: min(1200px, 100%);
+  background-color: var(--panel);
+  border: 1px solid var(--border);
   border-radius: 10px;
-  padding: 3%;
-  margin: 50px 0;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  padding: 24px;
+  margin: 50px auto; /* center the whole box horizontally */
 }
 .total-price span {
   font-size: 30px;
@@ -35,15 +62,105 @@ main {
 
 .total {
   font-weight: bold;
+  color: var(--brand);
 }
 .list-products {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  /* Base: 1 colonne, s'adapte à la largeur (pas d'overflow) */
+  grid-template-columns: repeat(1, minmax(18rem, 1fr));
+  justify-content: center; /* centrer les pistes horizontalement */
+  justify-items: center;   /* centrer chaque item dans sa piste */
+  gap: 24px;
   margin-top: 30px;
-  width: 70%;
+  width: 100%;
+  max-width: calc(3 * 18rem + 2 * 24px); /* limite à 3 colonnes sur grand écran (plus compact) */
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 12px 12px;
+}
+
+/* Ensure product cards have uniform look regardless of image size */
+.list-products .card-img-top {
+  height: 180px;
+  object-fit: contain;
+}
+.list-products > .card-body > .card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.list-products .card .card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  text-align: center; /* center titles, descriptions, and prices */
+}
+.list-products .add-to-cart {
+  margin-top: auto; /* push button to bottom for equalized heights */
+}
+.cart-list {
+  /* Cart: 3 produits par ligne sur grand écran, centré et réactif */
+  display: flex !important;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--gap);
+  width: 100%;
+  /* Largeur fixe par carte pour garder un rendu stable */
+  --cart-card: 18rem;
+  max-width: calc(4 * var(--cart-card) + 3 * var(--gap)); /* 4 par ligne lorsqu'il y a la place */
+  margin-left: auto;
+  margin-right: auto;
+}
+.cart-list > .card-body {
+  flex: 0 0 var(--cart-card);
+  width: var(--cart-card);
+}
+.cart-list > .card-body > .card { width: 100% !important; height: 100%; display: flex; flex-direction: column; }
+.cart-list .card-img-top { height: 180px; object-fit: contain; }
+/* Ensure cart item texts are centered as well */
+.cart-list .card .card-body { text-align: center; }
+
+/* Fix button width so its size doesn't change when label/feedback changes */
+.add-to-cart {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 200px;           /* fixed width */
+  white-space: nowrap;     /* prevent wrapping */
+}
+
+/* Smaller screens: slightly narrower fixed cards to fit viewport */
+@media (max-width: 420px) {
+  .list-products { grid-template-columns: 1fr; }
+  .card-img-top { height: 180px; }
+}
+
+/* Cart small screens: allow single column and full width */
+@media (max-width: 420px) {
+  .cart-list {
+    --cart-card: 18rem;
+    max-width: 100%;
+  }
+}
+
+/* 2 colonnes sur écrans moyens */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .list-products { grid-template-columns: repeat(2, 18rem); }
+}
+
+/* 3 colonnes fixes et centrées sur grand écran */
+@media (min-width: 1200px) {
+  .list-products { grid-template-columns: repeat(3, 18rem); }
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
 }
 .card {
-  padding: 5%;
+  background-color: var(--panel);
+  border-color: var(--border);
+  color: var(--text);
 }
 .card-body {
   display: flex;
@@ -53,20 +170,287 @@ main {
 }
 
 .quantity {
-  font-size: 25px;
+  font-size: 22px;
+  min-width: 26px;
+  text-align: center;
 }
 
 .card-body div {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 25px;
+  margin-top: 16px;
 }
 
-.fa-trash-alt {
-  color: #de6b5c;
-}
+.fa-trash-alt { color: var(--danger); }
+.fa-trash-alt:hover { filter: brightness(0.9); }
+
+.fa-plus-circle:hover,
+.fa-minus-circle:hover { color: var(--brand); }
 
 .fa-heart.liked {
-  color: #e63946;
+  color: var(--like);
+}
+.fa-heart:hover { color: var(--like); }
+
+/* Navbar polish (light) */
+.navbar-light .navbar-brand { color: var(--brand); letter-spacing: .3px; font-weight: 700; }
+.navbar-light .navbar-brand:hover { color: var(--brand-hover); }
+.navbar-light .nav-link { color: #444; }
+.navbar-light .nav-link:hover,
+.navbar-light .nav-link.active { color: var(--brand); }
+
+/* Fixed translucent navbar (glass effect) */
+.navbar.sticky-top { position: fixed; top: 0; left: 0; right: 0; z-index: 1030; }
+.navbar.bg-white {
+  background-color: rgba(255,255,255,.82) !important;
+  -webkit-backdrop-filter: saturate(180%) blur(10px);
+  backdrop-filter: saturate(180%) blur(10px);
+  box-shadow: 0 4px 16px rgba(0,0,0,.06);
+}
+/* Avoid content hidden behind fixed navbar */
+body { padding-top: var(--nav-offset, 64px); }
+
+/* Cart badge in navbar */
+.cart-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: inherit;
+  text-decoration: none;
+}
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -10px;
+  background: var(--brand);
+  color: #fff;
+  border-radius: 999px;
+  font-size: 12px;
+  line-height: 1;
+  padding: 4px 6px;
+  min-width: 18px;
+  text-align: center;
+}
+/* Navbar actions (cart + search) responsive tweaks */
+.nav-actions { flex-wrap: nowrap; }
+@media (max-width: 576px) {
+  .nav-actions { gap: .5rem; }
+  .nav-actions .form-control { width: 9.5rem; padding-left: .5rem; padding-right: .5rem; }
+  .nav-actions .btn { padding: .375rem .5rem; }
+  .nav-actions .cart-link i { font-size: 22px; }
+  .nav-actions .cart-badge { top: -4px; right: -8px; font-size: 11px; padding: 3px 5px; min-width: 16px; }
+}
+
+/* Accessibility focus */
+i[role="button"]:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(25,135,84,.35);
+  border-radius: 4px;
+}
+
+/* Utility: visually hidden */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border: 0;
+}
+
+/* Total box look */
+.total-price {
+  background: #fff;
+  border: 1px solid #eee;
+  padding: 12px 16px;
+  border-radius: 8px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 576px) {
+  .shopping-card-container { margin: 20px auto; padding: 16px; }
+  .total-price span { font-size: 24px; }
+}
+
+/* When burger menu is open on XS, hide right-side actions to avoid double cart/search */
+@media (max-width: 576px) {
+  #navbarSupportedContent.show ~ .nav-actions { display: none !important; }
+}
+
+/* (Removed duplicate legacy cart layout block) */
+
+/* Hero sections with ergonomic backgrounds */
+.hero {
+  position: relative;
+  width: 100%;
+  min-height: 70vh; /* taller to showcase carousel images */
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: #fff;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* subtle gradient overlay for readability */
+  background: linear-gradient(180deg, rgba(0,0,0,.25) 0%, rgba(0,0,0,.45) 100%);
+  z-index: 1; /* sit above images */
+}
+.hero .hero-content {
+  position: relative;
+  z-index: 2; /* content on top */
+  padding: 3rem 1.25rem;
+}
+.hero .hero-title {
+  font-weight: 800;
+  letter-spacing: .3px;
+  text-shadow: 0 2px 12px rgba(0,0,0,.35);
+}
+.hero .hero-subtitle {
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+  text-shadow: 0 1px 8px rgba(0,0,0,.35);
+}
+.hero--index { background-image: url('../assets/x.jpg'); }
+.hero--about { background-image: url('../assets/y.jpg'); }
+
+/* Brand button for cohesive CTAs */
+.btn-brand {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--brand);
+  --bs-btn-border-color: var(--brand);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--brand-hover);
+  --bs-btn-hover-border-color: var(--brand-hover);
+  --bs-btn-focus-shadow-rgb: 233,30,99; /* ~ var(--brand) */
+}
+
+/* Remove dark-specific overrides: using Bootstrap defaults for forms and footer */
+/* Professional footer styles */
+.site-footer {
+  background: #f5f6f8;
+  border-top: 1px solid #eee;
+  color: #555;
+  padding: 48px 0 18px;
+  font-size: 0.95rem;
+}
+.site-footer h6 {
+  font-size: .95rem;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: #2b2f36;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+.site-footer a { color: #555; text-decoration: none; transition: color .18s ease; }
+.site-footer a:hover { color: var(--brand); text-decoration: none; }
+.site-footer .list-unstyled { margin: 0; padding: 0; list-style: none; }
+.site-footer .list-unstyled li { margin-bottom: .45rem; }
+.site-footer .list-unstyled li a { display: inline-block; padding: 4px 0; }
+.site-footer .social-links a {
+  width: 40px; height: 40px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid #e5e7eb; border-radius: 50%; color: #666; margin-right: .55rem;
+  transition: all .18s ease;
+}
+.site-footer .social-links a:hover { background: transparent; color: inherit; border-color: #e5e7eb; transform: none; }
+/* Disable network-specific hover colors: keep neutral on hover */
+.site-footer .social-links a.social-facebook:hover,
+.site-footer .social-links a.social-instagram:hover,
+.site-footer .social-links a.social-x:hover,
+.site-footer .social-links a.social-youtube:hover { background: transparent; border-color: #e5e7eb; color: #666; transform: none; }
+.site-footer .newsletter .form-control { max-width: 420px; }
+.site-footer .newsletter .btn { white-space: nowrap; }
+/* Make the Subscribe button red in the footer newsletter, without changing other brand buttons */
+.site-footer .newsletter .btn.btn-brand {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #dc3545; /* Bootstrap danger */
+  --bs-btn-border-color: #dc3545;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #bb2d3b;
+  --bs-btn-hover-border-color: #b02a37;
+  --bs-btn-focus-shadow-rgb: 220,53,69;
+  /* Hard overrides to avoid any cascade quirks */
+  background-color: #dc3545 !important;
+  border-color: #dc3545 !important;
+  color: #fff !important;
+}
+.site-footer .newsletter .btn.btn-brand:hover,
+.site-footer .newsletter .btn.btn-brand:focus {
+  background-color: #bb2d3b !important;
+  border-color: #b02a37 !important;
+  color: #fff !important;
+}
+.site-footer .payments i { font-size: 28px; color: #777; margin-right: 10px; }
+.site-footer .apps img { height: 36px; }
+.site-footer .footer-bottom { border-top: 1px solid #eee; padding-top: 12px; margin-top: 24px; color: #777; }
+
+/* Footer ergonomics on small screens */
+@media (max-width: 576px) {
+  .site-footer { padding: 36px 0 16px; }
+  .site-footer .newsletter { align-items: stretch; }
+  .site-footer .social-links { margin-top: 12px; }
+}
+
+/* Better keyboard focus in footer */
+.site-footer a:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(233,30,99,.25);
+  border-radius: 6px;
+}
+
+
+@media (max-width: 576px) {
+  .hero { min-height: 50vh; background-attachment: scroll; }
+  .hero .hero-title { font-size: 1.6rem !important; }
+}
+
+/* Hero background carousel layering */
+.hero .hero-bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.hero .hero-bg .carousel,
+.hero .hero-bg .carousel-inner,
+.hero .hero-bg .carousel-item { height: 100%; }
+.hero .hero-bg .carousel-item img {
+  width: 100%; height: 100%; object-fit: cover; object-position: center;
+}
+/* Soften fade transition for background */
+.carousel.carousel-fade .carousel-item { transition: opacity 1s ease-in-out; }
+/* Ensure no buttons/indicators appear for the decorative hero carousel */
+.hero .hero-bg .carousel-control-prev,
+.hero .hero-bg .carousel-control-next,
+.hero .hero-bg .carousel-indicators { display: none !important; }
+
+/* (No fixed background; keep carousel scoped to hero only) */
+
+/* Make hero CTA highly visible on dark images */
+/* Make hero CTA fully filled and always visible on dark images */
+.hero .btn-brand {
+  /* Invert colors for clarity over dark backgrounds */
+  --bs-btn-color: var(--brand);
+  --bs-btn-bg: #ffffff;
+  --bs-btn-border-color: #ffffff;
+  --bs-btn-hover-color: #ffffff;
+  --bs-btn-hover-bg: var(--brand);
+  --bs-btn-hover-border-color: var(--brand);
+  --bs-btn-focus-shadow-rgb: 255,255,255;
+
+  color: var(--brand) !important;
+  background-color: #fff !important;
+  border-color: #fff !important;
+  border-width: 2px;
+  box-shadow: 0 10px 28px rgba(0,0,0,.35), 0 2px 6px rgba(0,0,0,.25);
+}
+.hero .btn-brand:hover,
+.hero .btn-brand:focus {
+  background-color: var(--brand) !important;
+  border-color: var(--brand) !important;
+  color: #fff !important;
+  box-shadow: 0 12px 32px rgba(0,0,0,.4), 0 3px 8px rgba(0,0,0,.3);
 }

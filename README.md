@@ -1,73 +1,60 @@
-# DOM Project 1 — Shopping Cart
+# Éclat Mode — DOM Shopping Cart (Vanilla JS)
 
-Petit projet DOM pour gérer un panier: augmenter/diminuer les quantités, supprimer un produit, “liker” un produit, et recalculer le total.
+Fashion storefront demo with a persistent shopping cart, a product landing page, a dedicated cart page, and a polished, responsive UI.
 
-## Aperçu des fonctionnalités
-- Boutons “+” et “-” pour modifier la quantité.
-- Bouton poubelle pour supprimer un produit de la liste.
-- Bouton cœur pour “liker” (change de couleur).
-- Total mis à jour automatiquement selon quantités et suppressions.
-- Icônes accessibles au clavier (tabindex, aria-label).
+## Highlights
+- Products landing with a hero background carousel (assets: x.jpg, x1.jpg, x2.jpg, x3.jpg).
+- Fixed, translucent navbar with synchronized cart badges across pages.
+- Search: filter products on the landing; works via URL `?q=` and redirects from other pages.
+- Cart page: increment/decrement, delete, like, and dynamic total; empty-cart UX with CTA.
+- Persistent cart state via `localStorage`.
+- About page with a themed hero.
+- Professional footer: multi-column links, newsletter (Subscribe button in red), payment icons, and social links (Facebook, Instagram, X/Twitter, YouTube).
+- Accessible and responsive layout with centered cards and sticky footer behavior.
 
-## Structure du projet
-- index.html — markup de la page.
-- style/style.css — styles (mise en page, grille responsive, navbar).
-- js/script.js — logique DOM (événements et calcul du total).
-- assets/ — images produits (baskets.png, socks.png, bag.png).
+## Tech Stack
+- HTML5, CSS3 (Bootstrap 5.1.3), Font Awesome 6.0.0-beta2
+- Vanilla JavaScript (no frameworks)
+- LocalStorage for persistence
 
-## Démarrage rapide
-- Ouvrir index.html dans le navigateur
-  - Linux: depuis le dossier du projet
-    - xdg-open index.html
-- Ou lancer un petit serveur local:
-  - Python: `python3 -m http.server 5500` puis ouvrir http://localhost:5500
-- Avec VS Code, “Open with Live Server” sur index.html.
+## Project Structure
+- index.html — Products + hero carousel + search.
+- cart.html — Cart management (quantities, like, remove, total).
+- about.html — Brand/mission page with hero.
+- style/style.css — Theme, layout, hero carousel layering, navbar, footer.
+- js/script.js — Cart logic, search, navbar badge sync, layout helpers.
+- assets/ — Images (products and hero backgrounds: x.jpg, x1.jpg, x2.jpg, x3.jpg, y.jpg).
 
-## Comment ça marche (js/script.js)
-- Au chargement (DOMContentLoaded), on sélectionne:
-  - `.total-price .total` pour afficher le total.
-  - Chaque produit via `.list-products .card .card-body`.
-- parsePrice(text): extrait un nombre à partir d’un texte du type “100 $”.
-- updateTotal():
-  - Pour chaque produit restant, lit le prix unitaire (`.unit-price`) et la quantité (`.quantity`),
-  - somme `prix * quantité`, et met à jour le total.
-- Événements par produit:
-  - “+” (.fa-plus-circle): incrémente `.quantity`, appelle updateTotal().
-  - “-” (.fa-minus-circle): décrémente si > 0, appelle updateTotal().
-  - “poubelle” (.fa-trash-alt): supprime le conteneur du produit, appelle updateTotal().
-  - “cœur” (.fa-heart): toggle de la classe `.liked` (couleur via CSS).
+## Run Locally
+Option 1: open `index.html` directly in your browser.
+- Linux CLI (optional): `xdg-open index.html`
 
-Extrait (simplifié):
-```js
-plusBtn.addEventListener('click', () => {
-  qtyEl.textContent = Number(qtyEl.textContent) + 1;
-  updateTotal();
-});
+Option 2: serve locally
+- Python: `python3 -m http.server 5500` then open http://localhost:5500
+- VS Code: use “Open with Live Server” on `index.html`.
 
-trashBtn.addEventListener('click', () => {
-  productEl.closest('.card')?.parentElement?.remove();
-  updateTotal();
-});
-```
+## Using the App
+- Add to cart on index: click “Add to cart” on a product card.
+- Search: use the navbar search on index, or from other pages (they redirect to index?q=...).
+- Cart page: use “+ / −” to adjust quantities, trash to remove, heart to like. Total updates live.
+- Empty cart: shows a message and a button back to products.
 
-## Styles principaux (style/style.css)
-- Grille responsive pour les produits:
-  - `.list-products` en `grid` avec `auto-fit` pour s’adapter à la largeur.
-- Cœur “liké”:
-  - `.fa-heart.liked { color: #e63946; }`
-- Navbar améliorée (couleurs hover, sticky, ombre).
-- Focus visible sur les icônes pour l’accessibilité.
+## Configuration & Customization
+- Brand color: edit CSS variable `--brand` in `style/style.css`.
+- Hero images: update the carousel in `index.html` (`.hero .hero-bg`) with your images under `assets/`.
+- Subscribe button color (footer): styled red via a scoped rule in `style/style.css`.
+- Social links: update footer anchors in each HTML file as needed.
 
-## Ajouter un nouveau produit
-Copier une carte existante dans `.list-products` puis modifier:
-- Image (`src="assets/..."` + `alt`).
-- Nom (`.card-title`), description (`.card-text`), prix (`.unit-price`).
-Les événements JS se lient automatiquement si la structure est la même.
+## Accessibility
+- Semantic HTML, alt text for images.
+- ARIA labels on interactive icons (cart qty controls, delete, like).
+- Keyboard focus styles and readable hero overlay.
 
-## Dépannage
-- Les images ne s’affichent pas: vérifier `assets/` et les chemins relatifs.
-- Le burger de la navbar: garder Bootstrap bundle (déjà inclus).
-- Le total ne change pas: vérifier que `.unit-price` contient un nombre et que `.quantity` est un nombre.
+## Troubleshooting
+- Image not visible: check filename and path under `assets/`.
+- Cart badge not updating: ensure `data-product-id` and `data-price` are set on product buttons.
+- Total not changing: ensure cart page elements include `.quantity` and `.unit-price` selectors.
+- X/Twitter icon: using `fab fa-twitter` for compatibility with FA 6.0.0-beta2.
 
-## Licence
-Projet pédagogique. Libre d’utilisation pour l’apprentissage.
+## License
+Educational project. Free to use for learning purposes.
